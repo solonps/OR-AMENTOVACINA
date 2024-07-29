@@ -63,6 +63,7 @@ const localizacoes = {
     "Região dos Lagos": 100,
     "Interior do Rio": 90,
   "100":100,
+  "0":0,
   "150":150,
   "200":200,
   "250":250,
