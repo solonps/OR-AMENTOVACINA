@@ -15,7 +15,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SISTEMA DE ORÇAMENTO ONLINE VCR</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Incluindo a biblioteca jsPDF e autoTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
 </head>
@@ -34,16 +33,12 @@
             <form id="form-cadastrar-cliente">
                 <label for="nome-cliente">Nome da Pessoa ou Empresa:</label>
                 <input type="text" id="nome-cliente" name="nome-cliente">
-
                 <label for="telefone-cliente">Telefone:</label>
                 <input type="text" id="telefone-cliente" name="telefone-cliente">
-
                 <label for="email-cliente">Email:</label>
                 <input type="email" id="email-cliente" name="email-cliente">
-
                 <label for="cpf-cnpj-cliente">CPF ou CNPJ:</label>
                 <input type="text" id="cpf-cnpj-cliente" name="cpf-cnpj-cliente">
-
                 <button type="button" onclick="cadastrarCliente()">Cadastrar</button>
             </form>
         </div>
@@ -54,25 +49,24 @@
             <form id="form-adicionar">
                 <label for="tipo-veiculo">Tipo de Veículo:</label>
                 <select id="tipo-veiculo" name="tipo-veiculo"></select>
-
                 <label for="tipo-implemento">Tipo de Implemento:</label>
                 <select id="tipo-implemento" name="tipo-implemento"></select>
-
                 <label for="quantidade">Quantidade:</label>
                 <input type="number" id="quantidade" name="quantidade" min="1">
-
                 <label for="localizacao">Localização:</label>
                 <select id="localizacao" name="localizacao"></select>
-
                 <button type="button" onclick="enviarVeiculo()">Enviar</button>
             </form>
         </div>
 
         <!-- Tela Enviado -->
         <div id="tela-enviado" class="tela">
-            <h2>Veículo Enviado</h2>
+            <h2>Adicionando Veiculo</h2>
             <button onclick="mostrarTela('tela-adicionar')">Enviar Outro Veículo</button>
             <button onclick="mostrarTela('tela-desconto')">Desconto</button>
+            <button onclick="mostrarTela('tela-garantia')">Garantia</button>
+            <button onclick="mostrarTela('tela-registro')">Registro</button>
+            <button onclick="mostrarTela('tela-condicao-pagamento')">Condição de pagamento</button>
             <button onclick="gerarOrcamento()">Gerar Orçamento</button>
             <button onclick="resetarOrcamento()">Resetar</button>
         </div>
@@ -80,9 +74,42 @@
         <!-- Tela Desconto -->
         <div id="tela-desconto" class="tela">
             <h2>Desconto</h2>
-            <label for="quantidade-desconto">Quantidade de Veículos:</label>
-            <input type="number" id="quantidade-desconto" name="quantidade-desconto" min="1">
+            <label for="porcentagem-desconto">Porcentagem de Desconto (%):</label>
+            <input type="number" id="porcentagem-desconto" name="porcentagem-desconto" min="0" max="100">
             <button onclick="aplicarDesconto()">Aplicar Desconto</button>
+        </div>
+
+        <!-- Tela Garantia -->
+        <div id="tela-garantia" class="tela">
+            <h2>Garantia</h2>
+            <label for="garantia">Selecione a Garantia:</label>
+            <select id="garantia" name="garantia">
+                <option value="6 meses">6 meses de garantia</option>
+                <option value="1 ano">1 ano de garantia</option>
+                <option value="2 anos">2 anos de garantia</option>
+            </select>
+            <button onclick="aplicarGarantia()">Aplicar Garantia</button>
+        </div>
+
+        <!-- Tela Registro -->
+        <div id="tela-registro" class="tela">
+            <h2>Registro</h2>
+            <select id="registro" name="registro">
+                <option value="1 ano">1 ano de registro</option>
+                <option value="2 anos">2 anos de registro</option>
+                <option value="3 anos">3 anos de registro</option>
+                <option value="4 anos">4 anos de registro</option>
+                <option value="vitalício">Registro vitalício</option>
+            </select>
+            <button onclick="aplicarRegistro()">Aplicar Registro</button>
+        </div>
+
+        <!-- Tela Condição de Pagamento -->
+        <div id="tela-condicao-pagamento" class="tela">
+            <h2>Condição de Pagamento</h2>
+            <label for="condicao-pagamento">Digite as condições de pagamento:</label>
+            <textarea id="condicao-pagamento" name="condicao-pagamento" rows="4" cols="50"></textarea>
+            <button onclick="aplicarCondicaoPagamento()">Aplicar Condição de Pagamento</button>
         </div>
     </div>
 

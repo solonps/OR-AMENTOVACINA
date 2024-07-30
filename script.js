@@ -1,5 +1,5 @@
 const veiculos = {
-  "NENHUM":2,
+    "NENHUM": 0,
     "Caminhão 2 eixos grande (toco)": 2190,
     "Caminhão 2 eixos médio (3/4)": 2150,
     "Caminhão 3 eixos (truck)": 2290,
@@ -22,15 +22,17 @@ const veiculos = {
 };
 
 const implementos = {
-  "NENHUM":(2),
+    "NENHUM": 0,
     "Baú fechado (grande)": 250,
     "Baú fechado (médio)": 200,
     "Baú fechado (pequeno)": 150,
     "Betoneira": 690,
+    "Bomba de concreto": 1190,
     "Caçamba basculante": 370,
     "Carreta 2 eixos": 650,
     "Carreta 3 eixos": 850,
     "Empilhadeira": 690,
+    "Escavadeira": 2350,
     "Gaiola": 350,
     "Guindaste grande (mais de 50t)": 2290,
     "Guindaste médio (10 a 50t)": 1390,
@@ -52,7 +54,6 @@ const implementos = {
 };
 
 const localizacoes = {
-  
     "Duque de Caxias, Belford Roxo": 20,
     "Magé": 40,
     "Nova Iguaçu": 40,
@@ -62,24 +63,26 @@ const localizacoes = {
     "São Gonçalo, Niterói, Itaboraí": 60,
     "Região dos Lagos": 100,
     "Interior do Rio": 90,
-  "100":100,
-  "0":0,
-  "150":150,
-  "200":200,
-  "250":250,
-  "300":300,
-  "350":350,
-  "400":400,
-  "500":500,
-  "600":600,
-  "800":800,
-  "1000":1000,
- 
+    "100": 100,
+    "150": 150,
+    "200": 200,
+    "250": 250,
+    "300": 300,
+    "350": 350,
+    "400": 400,
+    "500": 500,
+    "600": 600,
+    "800": 800,
+    "1000": 1000,
+    "0": 0
 };
 
 let veiculosAdicionados = [];
 let desconto = 0;
 let cliente = {};
+let garantia = '';
+let registro = ''; // Variável para armazenar o tempo de registro
+let condicaoPagamento = ''; // Variável para armazenar a condição de pagamento
 
 function mostrarTela(telaId) {
     document.querySelectorAll('.tela').forEach(tela => {
@@ -122,13 +125,28 @@ function enviarVeiculo() {
 }
 
 function aplicarDesconto() {
-    const quantidadeDesconto = parseInt(document.getElementById('quantidade-desconto').value);
-    if (quantidadeDesconto > 0) {
-        desconto = quantidadeDesconto;
+    const porcentagemDesconto = parseFloat(document.getElementById('porcentagem-desconto').value);
+    if (porcentagemDesconto >= 0 && porcentagemDesconto <= 100) {
+        desconto = porcentagemDesconto;
         mostrarTela('tela-enviado');
     } else {
-        alert('Por favor, insira uma quantidade válida.');
+        alert('Por favor, insira uma porcentagem válida.');
     }
+}
+
+function aplicarGarantia() {
+    garantia = document.getElementById('garantia').value;
+    mostrarTela('tela-enviado');
+}
+
+function aplicarRegistro() {
+    registro = document.getElementById('registro').value;
+    mostrarTela('tela-enviado');
+}
+
+function aplicarCondicaoPagamento() {
+    condicaoPagamento = document.getElementById('condicao-pagamento').value;
+    mostrarTela('tela-enviado');
 }
 
 function gerarOrcamento() {
@@ -141,35 +159,30 @@ function gerarOrcamento() {
 
     const numeroOrcamento = 150 + veiculosAdicionados.length;
 
-    // Título do orçamento
     doc.setFontSize(22);
-  doc.text(`ORÇAMENTO Nº ${numeroOrcamento} / ${dataEmissao.getFullYear()}`, 10, 16);
- 
-    // Dados da empresa emissora
+    doc.text(`ORÇAMENTO Nº ${numeroOrcamento} / ${dataEmissao.getFullYear()}`, 10, 16);
+
     doc.setFontSize(13);
     doc.text('VCR VACINA CONTRA ROUBO LTDA', 10, 30);
 
-  doc.setFontSize(10);
-     doc.text('luisfelipe@vacinacontraroubo.com.br', 10, 36); doc.setFontSize(9);
+    doc.setFontSize(10);
+    doc.text('luisfelipe@vacinacontraroubo.com.br', 10, 36);
+    doc.setFontSize(9);
     doc.text('(21) 97907-1371', 10, 40);
-   doc.setFontSize(8);
+    doc.setFontSize(8);
     doc.text(`Data de Emissão: ${dataEmissao.toLocaleDateString()}`, 160, 14);
-    doc.text(`Data de Vencimento: ${dataVencimento.toLocaleDateString()}`, 10, 290);   
-  doc.setFontSize(9);
-  doc.text('www.vacinacontraroubo.com', 90, 290);
-
-    // Dados do cliente
+    doc.text(`Data de Vencimento: ${dataVencimento.toLocaleDateString()}`, 10, 290);
+    doc.setFontSize(9);
+    doc.text('www.vacinacontraroubo.com', 90, 290);
 
     doc.setFontSize(13);
     doc.text(` ${cliente.nome}`, 10, 51);
-   doc.setFontSize(10);
-    doc.text(` ${cliente.email}`, 10,61);
-     doc.setFontSize(9);
-     doc.text(` CNPJ/CPF: ${cliente.cpfCnpj}`, 10, 56);
+    doc.setFontSize(10);
+    doc.text(` ${cliente.email}`, 10, 61);
+    doc.setFontSize(9);
+    doc.text(` CNPJ/CPF: ${cliente.cpfCnpj}`, 10, 56);
     doc.text(`${cliente.telefone}`, 11, 66);
-  
 
-    // Tabela de veículos
     let valorTotal = 0;
     const rows = veiculosAdicionados.map((item, index) => {
         const valorVeiculo = veiculos[item.tipoVeiculo];
@@ -196,22 +209,44 @@ function gerarOrcamento() {
         theme: 'grid'
     });
 
-    // Valor total e desconto
     let y = doc.previousAutoTable.finalY + 10;
-    doc.setFontSize(12);
+    doc.setFontSize(10);
     doc.text(`Valor Total: R$ ${valorTotal.toFixed(2)}`, 10, y);
     y += 10;
 
     if (desconto > 0) {
-        const valorDesconto = desconto * 100; // Exemplo de cálculo de desconto
-        doc.text(`Desconto: R$ ${valorDesconto.toFixed(2)}`, 10, y);
+        const valorDesconto = (valorTotal * desconto) / 100;
+        doc.setFontSize(12);
+        doc.text(`Desconto: ${desconto}% (R$ ${valorDesconto.toFixed(2)})`, 10, y);
         y += 10;
         valorTotal -= valorDesconto;
     }
 
     doc.text(`Valor Final: R$ ${valorTotal.toFixed(2)}`, 10, y);
+    y += 20;
 
-   
+    if (garantia) {
+        doc.setFontSize(11);
+        doc.text(`Garantia de regravação: ${garantia}`, 10, y);
+        y += 10;
+    }
+
+    if (registro) {
+        doc.text(`Registro no Sistema Nacional: ${registro}`, 10, y);
+        y += 5;
+        doc.setFontSize(9);
+        doc.text(`www.sinid.org.br`, 10, y);
+    }
+
+    if (condicaoPagamento) {
+        y += 10;
+        doc.setFontSize(11);
+        doc.text(`Condição de Pagamento:`, 10, y);
+        y += 2;
+        doc.setFontSize(10);
+        doc.text(condicaoPagamento, 10, y + 5);
+    }
+
     doc.save(`orcamento_${numeroOrcamento}.pdf`);
 }
 
@@ -219,9 +254,15 @@ function resetarOrcamento() {
     veiculosAdicionados = [];
     desconto = 0;
     cliente = {};
+    garantia = '';
+    registro = '';
+    condicaoPagamento = '';
     document.getElementById('form-cadastrar-cliente').reset();
     document.getElementById('form-adicionar').reset();
-    document.getElementById('quantidade-desconto').value = '';
+    document.getElementById('porcentagem-desconto').value = '';
+    document.getElementById('garantia').value = '6 meses';
+    document.getElementById('registro').value = '1 ano';
+    document.getElementById('condicao-pagamento').value = '';
     mostrarTela('tela-inicial');
 }
 
@@ -229,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tipoVeiculoSelect = document.getElementById('tipo-veiculo');
     const tipoImplementoSelect = document.getElementById('tipo-implemento');
     const localizacaoSelect = document.getElementById('localizacao');
+    const registroSelect = document.getElementById('registro'); // Inicialização do select de registro
 
     for (const veiculo in veiculos) {
         const option = document.createElement('option');
@@ -249,5 +291,12 @@ document.addEventListener('DOMContentLoaded', () => {
         option.value = localizacao;
         option.textContent = localizacao;
         localizacaoSelect.appendChild(option);
+    }
+
+    for (const tempoRegistro in { "1 ano": 1, "2 anos": 2, "3 anos": 3, "4 anos": 4, "vitalício": "vitalício" }) {
+        const option = document.createElement('option');
+        option.value = tempoRegistro;
+        option.textContent = tempoRegistro;
+        registroSelect.appendChild(option);
     }
 });
